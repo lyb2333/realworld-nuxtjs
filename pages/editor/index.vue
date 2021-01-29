@@ -7,18 +7,21 @@
           <form>
             <fieldset>
               <fieldset class="form-group">
-                  <input type="text" class="form-control form-control-lg" placeholder="Article Title">
+                  <input v-model="title" type="text" class="form-control form-control-lg" placeholder="Article Title">
               </fieldset>
               <fieldset class="form-group">
-                  <input type="text" class="form-control" placeholder="What's this article about?">
+                  <input v-model="articleAbout" type="text" class="form-control" placeholder="What's this article about?">
               </fieldset>
               <fieldset class="form-group">
-                  <textarea class="form-control" rows="8" placeholder="Write your article (in markdown)"></textarea>
+                  <textarea v-model="content" class="form-control" rows="8" placeholder="Write your article (in markdown)"></textarea>
               </fieldset>
               <fieldset class="form-group">
-                  <input type="text" class="form-control" placeholder="Enter tags"><div class="tag-list"></div>
+                  <input v-model="tag" type="text" class="form-control" placeholder="Enter tags" @keydown.enter="addTag">
+                  <div class="tag-list" v-for="(item, index) in tagList" :key="item">
+                    <i class="ion-close-round" @click="deleteTag(index)"></i> {{ item }}
+                  </div>
               </fieldset>
-              <button class="btn btn-lg pull-xs-right btn-primary" type="button">
+              <button class="btn btn-lg pull-xs-right btn-primary" type="button" @click="publishArticle">
                   Publish Article
               </button>
             </fieldset>
@@ -31,9 +34,46 @@
 </template>
 
 <script>
+import { createArticle } from '@/api/article'
 export default {
   name: 'EditPage',
-  middleware: ['authenticated']
+  middleware: ['authenticated'],
+  data() {
+    return {
+      title: '',
+      articleAbout: '',
+      content: '',
+      tag: '',
+      tagList: []
+    }
+  },
+  methods: {
+    addTag() {
+      if (this.tag) {
+        this.tagList.push(this.tag)
+        this.tag = ""
+      }
+    },
+    deleteTag(index) {
+      this.tagList.slice(index, 1)
+    },
+    publishArticle() {
+      createArticle({
+        article: {
+          title: this.title,
+          description: this.articleAbout,
+          body: this.content,
+          tagList: this.tagList
+        }
+      }).then(res => {
+        this.title = '',
+        this.articleAbout = '',
+        this.content = '',
+        this.tag = '',
+        this.tagList = []
+      })
+    }
+  }
 }
 </script>
 

@@ -6,7 +6,7 @@
 
         <h1>{{ article.title }}</h1>
 
-        <article-meta />
+        <article-meta :article="article" />
 
       </div>
     </div>
@@ -20,14 +20,14 @@
       <hr />
 
       <div class="article-actions">
-        <article-meta />
+        <article-meta :article="article" />
       </div>
 
       <div class="row">
 
         <div class="col-xs-12 col-md-8 offset-md-2">
 
-          <article-comments />
+          <article-comments :article="article" />
           
         </div>
 
