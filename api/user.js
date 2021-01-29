@@ -41,3 +41,20 @@ export const unFollowUser = username => {
     url: `/api/profiles/${username}/follow`
   })
 }
+
+// get current user
+export const getCurrentUser = () => {
+  return request({
+    method: 'GET',
+    url: '/api/user'
+  })
+}
+
+// update current user
+export const updateCurrentUser = data => {
+  return request({
+    method: 'PUT',
+    url: '/api/user',
+    data
+  })
+}
